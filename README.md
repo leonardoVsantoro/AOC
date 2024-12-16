@@ -1,6 +1,3 @@
-Here's a revised README:  
-
----
 
 # Advent of Code Solutions 🎄  
 
