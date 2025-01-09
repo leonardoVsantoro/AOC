@@ -12,8 +12,6 @@ for line in rules_in.splitlines():
     rules[line.split(' -> ')[1]] = ( inop[0], inop[2], inop[1])
 
 
-
-
 from collections import deque
 def computez(wires, rules):
     def do_op(in1, in2, op):
@@ -49,12 +47,10 @@ while True:
     carry = False
     for i,z in enumerate(all_zwires):
         sym_out = computez(wires_sym, rules)
-
         try:
             _x =  sym_out['x{}'.format(str(i).zfill(2))]
             _y =  sym_out['y{}'.format(str(i).zfill(2))]
         except:
-            None
             _x = False; _y = False
         shouldbez = (_x ^ _y) ^ carry
         oldcarry = carry
@@ -62,7 +58,6 @@ while True:
 
         if sym_out[z] != shouldbez:
             # print(f'Error at {z}')
-            w = lookforvalue(shouldbez)
             if 'XOR' == rules[z][2]:
                 current = set([rules[z][0], rules[z][1]])
                 w0 = lookforvalue(_x ^ _y); w1 = lookforvalue(oldcarry)
@@ -74,12 +69,13 @@ while True:
                         touched += [(w,c)]
                         # print('switched {} with {}'.format(c,w))
                     break
-
-            if w is not None:
-                rules[w], rules[z] =  rules[z], rules[w]
-                touched += [(w,z)]
-                # print('switched {} with {}'.format(z,w))
-                break
+            else:
+                w = lookforvalue(shouldbez)
+                if w is not None:
+                    rules[w], rules[z] =  rules[z], rules[w]
+                    touched += [(w,z)]
+                    # print('switched {} with {}'.format(z,w))
+                    break
             
     if i  == len(all_zwires)-1:
         break
